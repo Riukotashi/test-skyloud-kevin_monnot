@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-deployment
+  labels:
+    app: node-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+      - name: node-app
+        image: riukotashi/test-skyloud:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: node
+            containerPort: 3000
+            protocol: TCP
+        envFrom:
+          - configMapRef:
+              name: node-configmap
+          - secretRef:
+              name: node-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-lb
+  labels:
+    app: node-app
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: node-app
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-configmap
+data: 
+  SERVEICE__NONSENSITIVE_DATA: come_from_configmap
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: node-secret
+type: Opaque
+data: 
+  SERVICE__SENSITIVE_DATA: Y29tZV9mcm9tX3NlY3JldA==
+
+  

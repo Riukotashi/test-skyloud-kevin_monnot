@@ -1,0 +1,23 @@
+replicaCount: 3
+namespace: app-01
+
+image:
+  repository: riukotashi/test-skyloud
+  pullPolicy: Always
+  tag: "latest"
+  exposePort: 3000
+
+node:
+  sensitiveData: Y29tZV9mcm9tX3NlY3JldA==
+  nonSensitiveData: come_from_configmap
+
+service:
+  type: LoadBalancer
+  port: 80
+
+issuer:
+  email: kevin.monnot@ynov.com
+
+ingress:
+  enabled: true
+  hostname: d73a-2a01-cb14-b4-6b00-9cc4-c0e9-228b-25e8.ngrok.io
